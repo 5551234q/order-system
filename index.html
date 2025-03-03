@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>點餐系統</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .menu {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    .menu h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .menu-item span {
+      flex: 1;
+    }
+    .menu-item input {
+      width: 60px;
+      padding: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <h1>點餐系統</h1>
+    <div class="menu-item">
+      <span>乾冰汽水 $40</span>
+      <input type="number" id="soda" value="0" min="0">
+    </div>
+    <div class="menu-item">
+      <span>糖葫蘆 $30</span>
+      <input type="number" id="candied" value="0" min="0">
+    </div>
+    <button onclick="placeOrder()">送出訂單</button>
+  </div>
+  
+  <script>
+    function placeOrder() {
+      const sodaQty = parseInt(document.getElementById('soda').value) || 0;
+      const candiedQty = parseInt(document.getElementById('candied').value) || 0;
+      const sodaTotal = sodaQty * 40;
+      const candiedTotal = candiedQty * 30;
+      const total = sodaTotal + candiedTotal;
+      
+      const queryParams = `soda=${sodaQty}&candied=${candiedQty}&total=${total}`;
+      window.location.href = "confirmation.html?" + queryParams;
+    }
+  </script>
+</body>
+</html>
+index.html

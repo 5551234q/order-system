@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>訂單確認</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .confirmation {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+    .confirmation h1 {
+      margin-bottom: 20px;
+    }
+    .confirmation ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    @media print {
+      body {
+        background: none;
+      }
+      .confirmation {
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation">
+    <h1>訂單確認</h1>
+    <div id="orderDetails"></div>
+  </div>
+  
+  <script>
+    function getQueryParams() {
+      const params = {};
+      const search = window.location.search.substring(1);
+      if (search) {
+        const parts = search.split('&');
+        parts.forEach(function(part) {
+          const pair = part.split('=');
+          params[pair[0]] = decodeURIComponent(pair[1]);
+        });
+      }
+      return params;
+    }
+    
+    const params = getQueryParams();
+    const sodaQty = parseInt(params.soda) || 0;
+    const candiedQty = parseInt(params.candied) || 0;
+    const total = parseInt(params.total) || 0;
+    
+    let detailsHtml = "<ul>";
+    if (sodaQty > 0) {
+      detailsHtml += `<li>乾冰汽水 x ${sodaQty} = $${sodaQty * 40}</li>`;
+    }
+    if (candiedQty > 0) {
+      detailsHtml += `<li>糖葫蘆 x ${candiedQty} = $${candiedQty * 30}</li>`;
+    }
+    detailsHtml += "</ul>";
+    detailsHtml += `<h3>總金額: $${total}</h3>`;
+    
+    document.getElementById('orderDetails').innerHTML = detailsHtml;
+
+    // 當頁面載入完成後，自動啟動列印功能
+    window.onload = function() {
+      window.print();
+    };
+  </script>
+</body>
+</html>
