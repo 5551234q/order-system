@@ -44,10 +44,13 @@
 <body>
   <div class="confirmation">
     <h1>訂單確認</h1>
+    <!-- 顯示訂單單號 -->
+    <p id="orderNumber"></p>
     <div id="orderDetails"></div>
   </div>
   
   <script>
+    // 解析 URL 查詢參數
     function getQueryParams() {
       const params = {};
       const search = window.location.search.substring(1);
@@ -62,10 +65,16 @@
     }
     
     const params = getQueryParams();
+    const orderNumber = params.order || '無';
     const sodaQty = parseInt(params.soda) || 0;
     const candiedQty = parseInt(params.candied) || 0;
+    const donationTotal = parseInt(params.donation) || 0;
     const total = parseInt(params.total) || 0;
     
+    // 顯示訂單單號
+    document.getElementById('orderNumber').innerHTML = `<strong>訂單單號：</strong> ${orderNumber}`;
+    
+    // 組合訂單明細
     let detailsHtml = "<ul>";
     if (sodaQty > 0) {
       detailsHtml += `<li>乾冰汽水 x ${sodaQty} = $${sodaQty * 40}</li>`;
@@ -73,12 +82,15 @@
     if (candiedQty > 0) {
       detailsHtml += `<li>糖葫蘆 x ${candiedQty} = $${candiedQty * 30}</li>`;
     }
+    if (donationTotal > 0) {
+      detailsHtml += `<li>捐款 = $${donationTotal}</li>`;
+    }
     detailsHtml += "</ul>";
     detailsHtml += `<h3>總金額: $${total}</h3>`;
     
     document.getElementById('orderDetails').innerHTML = detailsHtml;
-
-    // 當頁面載入完成後，自動啟動列印功能
+    
+    // 當頁面載入完成後，自動觸發列印功能
     window.onload = function() {
       window.print();
     };

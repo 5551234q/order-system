@@ -35,9 +35,12 @@
     .menu-item span {
       flex: 1;
     }
-    .menu-item input {
+    .menu-item input[type="number"] {
       width: 60px;
       padding: 5px;
+    }
+    .menu-item label {
+      font-size: 14px;
     }
     button {
       width: 100%;
@@ -64,21 +67,53 @@
       <span>糖葫蘆 $30</span>
       <input type="number" id="candied" value="0" min="0">
     </div>
+    <!-- 新增捐款選項 -->
+    <div class="menu-item">
+      <label>
+        <input type="checkbox" id="donation"> 加入捐款 (10元)
+      </label>
+    </div>
     <button onclick="placeOrder()">送出訂單</button>
   </div>
   
   <script>
+    // 生成規律的訂單單號，例如：ORD-0001、ORD-0002
+    function generateOrderNumber() {
+      let counter = localStorage.getItem('orderCounter');
+      if (counter === null) {
+        counter = 1;
+      } else {
+        counter = parseInt(counter) + 1;
+      }
+      localStorage.setItem('orderCounter', counter);
+      return 'ORD-' + String(counter).padStart(4, '0');
+    }
+
     function placeOrder() {
       const sodaQty = parseInt(document.getElementById('soda').value) || 0;
       const candiedQty = parseInt(document.getElementById('candied').value) || 0;
+      
+      // 若兩項商品皆未選擇則不允許送出訂單
+      if (sodaQty === 0 && candiedQty === 0) {
+        alert("請至少選擇一項商品再送出訂單！");
+        return;
+      }
+      
       const sodaTotal = sodaQty * 40;
       const candiedTotal = candiedQty * 30;
-      const total = sodaTotal + candiedTotal;
       
-      const queryParams = `soda=${sodaQty}&candied=${candiedQty}&total=${total}`;
+      // 判斷捐款箱是否勾選
+      const donationSelected = document.getElementById('donation').checked;
+      const donationTotal = donationSelected ? 10 : 0;
+      
+      const total = sodaTotal + candiedTotal + donationTotal;
+      
+      const orderNumber = generateOrderNumber();
+      
+      // 組合 URL 查詢參數，加入 donation 參數
+      const queryParams = `order=${orderNumber}&soda=${sodaQty}&candied=${candiedQty}&donation=${donationTotal}&total=${total}`;
       window.location.href = "confirmation.html?" + queryParams;
     }
   </script>
 </body>
 </html>
-index.html
